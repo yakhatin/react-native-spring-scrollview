@@ -123,6 +123,7 @@ SpringScrollView.defaultProps = {
   inputToolBarHeight: 44,
   tapToHideKeyboard: true,
   dragToHideKeyboard: true,
+  predefinedContentSize: undefined,
 };
 
 class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
@@ -146,9 +147,15 @@ class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
     };
     const onContentSize = (e) => {
       const { layout } = e.nativeEvent;
-      props.contentSize.width.value = layout.width;
-      props.contentSize.height.value = layout.height;
-      props.onContentSizeChange({ ...layout });
+      const nextContentSize = {
+        ...layout,
+        ...props.predefinedContentSize,
+      };
+
+      props.contentSize.width.value = nextContentSize.width;
+      props.contentSize.height.value = nextContentSize.height;
+
+      props.onContentSizeChange(nextContentSize);
     };
 
     const isOutOfTop = () => {
