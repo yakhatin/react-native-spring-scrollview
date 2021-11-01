@@ -41,43 +41,7 @@ import Reanimated, {
 import { RefreshHeader } from "./RefreshHeader";
 import { LoadingFooter } from "./LoadingFooter";
 import { styles } from "./styles";
-
-interface SpringScrollViewType extends ViewProps {
-  contentContainerStyle?: ViewStyle;
-  inverted?: boolean;
-  bounces?: boolean | "vertical" | "horizontal";
-  scrollEnabled?: boolean | "vertical" | "horizontal";
-  directionalLockEnabled?: boolean;
-  showsVerticalScrollIndicator?: boolean;
-  showsHorizontalScrollIndicator?: boolean;
-  pagingEnabled?: null | undefined | "vertical" | "horizontal";
-  decelerationRate?: number;
-  pageSize?: { width: number, height: number };
-  refreshHeader?: RefreshHeader;
-  loadingFooter?: LoadingFooter;
-  refreshing?: boolean;
-  allLoaded?: boolean;
-  loadingMore?: boolean;
-  preventReRender?: boolean;
-  onScroll?: (contentOffset: {
-    x: number,
-    y: number,
-  }) => any;
-  onScrollUI?: (contentOffset: {
-    x: Reanimated.SharedValue,
-    y: Reanimated.SharedValue,
-  }) => any;
-  onSizeChange?: ({ width: number, height: number }) => any;
-  onContentSizeChange?: ({ width: number, height: number }) => any;
-  onTouchBegin?: () => any;
-  onTouchEnd?: () => any;
-  onScrollBeginDrag?: () => any;
-  onScrollEndDrag?: () => any;
-  textInputRefs?: TextInput[];
-  inputToolBarHeight?: number;
-  dragToHideKeyboard?: boolean;
-  tapToHideKeyboard?: boolean;
-}
+import { SpringScrollViewPropType } from './Types';
 
 export const PanHandlerContext = React.createContext({
   isParentFocus: () => {
@@ -100,7 +64,7 @@ export const PanHandlerContext = React.createContext({
 
 export const CrossHeaderTabContext = React.createContext();
 
-export const SpringScrollView = React.forwardRef((props: SpringScrollViewType, ref) => {
+export const SpringScrollView = React.forwardRef((props, ref) => {
   const [sharedValues] = useState({
     size: { width: useSharedValue(0), height: useSharedValue(0) },
     contentSize: { width: useSharedValue(0), height: useSharedValue(0) },
@@ -221,9 +185,9 @@ class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
       return (
         props.contentOffset.x.value >=
         props.contentInsets.right.value +
-          props.contentSize.width.value -
-          props.size.width.value -
-          0.1
+        props.contentSize.width.value -
+        props.size.width.value -
+        0.1
       );
     };
     const isOutOfHorizontal = () => {
@@ -270,8 +234,8 @@ class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
         } else if (
           estY >
           props.contentSize.height.value -
-            props.size.height.value +
-            props.contentInsets.bottom.value
+          props.size.height.value +
+          props.contentInsets.bottom.value
         ) {
           offset.y =
             props.contentSize.height.value -
@@ -317,14 +281,14 @@ class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
         (props.loadMoreStatus.value === "dragging" ||
           props.loadMoreStatus.value === "draggingCancel") &&
         props.contentOffset.y.value >
-          props.contentSize.height.value - props.size.height.value + props.loadingFooter.height
+        props.contentSize.height.value - props.size.height.value + props.loadingFooter.height
       ) {
         props.loadMoreStatus.value = "draggingEnough";
         shouldChange = true;
       } else if (
         props.loadMoreStatus.value === "draggingEnough" &&
         props.contentOffset.y.value <
-          props.contentSize.height.value - props.size.height.value + props.loadingFooter.height
+        props.contentSize.height.value - props.size.height.value + props.loadingFooter.height
       ) {
         props.loadMoreStatus.value = "draggingCancel";
         shouldChange = true;
@@ -741,7 +705,7 @@ class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
       () => {
         return { x: props.contentOffset.x.value, y: props.contentOffset.y.value };
       },
-      (offset: { x: number, y: number }, previous: { x: number, y: number }) => {
+      (offset, previous) => {
         if (!previous || offset.x !== previous.x || offset.y !== previous.y) {
           if (props.onScrollUI) props.onScrollUI(props.contentOffset);
           if (props.onScroll) runOnJS(props.onScroll)(offset);
@@ -776,7 +740,7 @@ class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
           {
             translateY: props.contentSize.height.value
               ? (props.contentOffset.y.value * props.size.height.value) /
-                props.contentSize.height.value
+              props.contentSize.height.value
               : 0,
           },
         ],
@@ -792,7 +756,7 @@ class SpringScrollViewClass extends React.Component<SpringScrollViewType> {
           {
             translateX: props.contentSize.width.value
               ? (props.contentOffset.x.value * props.size.width.value) /
-                props.contentSize.width.value
+              props.contentSize.width.value
               : 0,
           },
         ],

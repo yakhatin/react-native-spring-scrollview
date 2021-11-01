@@ -88,39 +88,44 @@ declare module 'react-native-spring-scrollview' {
   export class NormalFooter extends LoadingFooter {}
 
   export interface SpringScrollViewPropType extends ViewProps {
-    contentStyle?: ViewStyle;
-    bounces?: boolean;
-    scrollEnabled?: boolean;
-    pagingEnabled?: boolean;
-    pageSize?: Size;
-    decelerationRate?: number;
+    contentContainerStyle?: ViewStyle;
+    inverted?: boolean;
+    bounces?: boolean | "vertical" | "horizontal";
+    scrollEnabled?: boolean | "vertical" | "horizontal";
     directionalLockEnabled?: boolean;
-    initialContentOffset?: Offset;
     showsVerticalScrollIndicator?: boolean;
     showsHorizontalScrollIndicator?: boolean;
-    refreshHeader?: React.ComponentClass<
-      RefreshHeaderPropType,
-      RefreshHeaderStateType
-    >;
-    loadingFooter?: React.ComponentClass<
-      LoadingFooterPropType,
-      LoadingFooterStateType
-    >;
-    onRefresh?: () => any;
-    onLoading?: () => any;
+    pagingEnabled?: null | undefined | "vertical" | "horizontal";
+    decelerationRate?: number;
+    pageSize?: { width: number, height: number };
+    refreshHeader?: RefreshHeader;
+    loadingFooter?: LoadingFooter;
+    refreshing?: boolean;
     allLoaded?: boolean;
-    textInputRefs?: any[];
-    inputToolBarHeight?: number;
-    dragToHideKeyboard?: boolean;
+    loadingMore?: boolean;
+    preventReRender?: boolean;
+    onScroll?: (contentOffset: {
+      x: number,
+      y: number,
+    }) => any;
+    onScrollUI?: (contentOffset: {
+      x: Reanimated.SharedValue,
+      y: Reanimated.SharedValue,
+    }) => any;
+    onSizeChange?: ({ width: number, height: number }) => any;
+    onContentSizeChange?: ({ width: number, height: number }) => any;
     onTouchBegin?: () => any;
     onTouchEnd?: () => any;
-    inverted?: boolean;
-    onMomentumScrollBegin?: () => any;
-    onMomentumScrollEnd?: () => any;
-    onScroll?: (evt: ScrollEvent) => any;
-    onNativeContentOffsetExtract?: NativeContentOffset;
-    onSizeChange?: (size: Size) => any;
-    onContentSizeChange?: (size: Size) => any;
+    onScrollBeginDrag?: () => any;
+    onScrollEndDrag?: () => any;
+    textInputRefs?: TextInput[];
+    inputToolBarHeight?: number;
+    dragToHideKeyboard?: boolean;
+    tapToHideKeyboard?: boolean;
+    predefinedContentSize?: {
+      height?: number;
+      width: number;
+    }
   }
   export class SpringScrollView extends React.PureComponent<SpringScrollViewPropType> {
     scrollTo(offset: Offset, animated?: boolean): Promise<void>;
